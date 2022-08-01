@@ -1,11 +1,14 @@
-package initializer
+package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 
+	"github.com/kristiansantos/ms_first/initializer/env"
 	"github.com/kristiansantos/ms_first/pkg/logger"
+	"github.com/kristiansantos/ms_first/pkg/mongodb"
 )
 
 type server struct {
@@ -14,14 +17,14 @@ type server struct {
 	httpServer http.Server
 }
 
-func NewServer(addr string, port int) *server {
+func New(addr string, port int) *server {
 	return &server{
 		Addr: addr,
 		Port: port,
 	}
 }
 
-func (s *server) HttpServerBuild(app Application) {
+func (s *server) HttpServerBuild(app env.Application) {
 	s.httpServer = http.Server{
 		Addr: fmt.Sprintf("%s:%d", s.Addr, s.Port),
 		// Handler:      middleware.Recovery(router.Client),
@@ -53,12 +56,12 @@ func (s *server) StartServerHttp() error {
 	return nil
 }
 
-func (s *server) Run(app Application, log logger.ILoggerProvider) error {
+func (s *server) Run(app env.Application, log logger.ILoggerProvider) error {
 	log.Info("server.main.Run", fmt.Sprintf("Server running on port :%d", s.Port))
 	log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
 	log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
 
-	if connError := mongoConnetion(app); connError != nil {
+	if connError := mongodbConnetion(app); connError != nil {
 		panic(fmt.Sprintf("Error connecting to mongodb: %v", connError.Error))
 	}
 
@@ -73,12 +76,20 @@ func (s *server) Run(app Application, log logger.ILoggerProvider) error {
 	return nil
 }
 
-func mongoConnetion(app Application) error {
+func mongodbConnetion(app env.Application) error {
+	ctx := context.TODO()
+	mongoConnection := mongodb.New(ctx)
 
-	return nil
+	if mongoConnection.Error != nil {
+		connError := fmt.Sprintf("error connecting to mongodb: %v", mongoConnection.Error)
+		panic(connError)
+		return mongoConnection.Error
+	} else {
+		return nil
+	}
 }
 
-func elasticsearchConnetion(app Application) error {
+func elasticsearchConnetion(app env.Application) error {
 
 	return nil
 }
