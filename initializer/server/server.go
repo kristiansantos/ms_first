@@ -81,8 +81,6 @@ func mongodbConnetion(app env.Application) error {
 	mongoConnection := mongodb.New(ctx)
 
 	if mongoConnection.Error != nil {
-		connError := fmt.Sprintf("error connecting to mongodb: %v", mongoConnection.Error)
-		panic(connError)
 		return mongoConnection.Error
 	} else {
 		return nil
