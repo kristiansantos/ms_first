@@ -12,20 +12,22 @@ import (
 )
 
 type server struct {
-	Addr       string
-	Port       int
-	httpServer http.Server
+	Addr        string
+	Port        int
+	MongodbConn mongodb.Storage
+	HttpServer  http.Server
 }
 
 func New(addr string, port int) *server {
 	return &server{
-		Addr: addr,
-		Port: port,
+		Addr:        addr,
+		Port:        port,
+		MongodbConn: mongodbStart(),
 	}
 }
 
 func (s *server) HttpServerBuild(app env.Application) {
-	s.httpServer = http.Server{
+	s.HttpServer = http.Server{
 		Addr: fmt.Sprintf("%s:%d", s.Addr, s.Port),
 		// Handler:      middleware.Recovery(router.Client),
 		ReadTimeout:  app.ReadTimeout * 2,
@@ -34,7 +36,7 @@ func (s *server) HttpServerBuild(app env.Application) {
 }
 
 func (s *server) StartServerHttp() error {
-	if err := s.httpServer.ListenAndServe(); err != nil {
+	if err := s.HttpServer.ListenAndServe(); err != nil {
 		if err == http.ErrServerClosed {
 			fmt.Println("Finish server")
 		} else {
@@ -43,12 +45,12 @@ func (s *server) StartServerHttp() error {
 
 		process, err := os.FindProcess(os.Getpid())
 		if err != nil {
-			fmt.Println("couldn't find process to exit")
+			fmt.Println("Couldn't find process to exit")
 			os.Exit(1)
 		}
 
 		if err := process.Signal(os.Interrupt); err != nil {
-			fmt.Println("couldn't find process to exit")
+			fmt.Println("Couldn't find process to exit")
 			os.Exit(1)
 		}
 
@@ -61,8 +63,8 @@ func (s *server) Run(app env.Application, log logger.ILoggerProvider) error {
 	log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
 	log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
 
-	if connError := mongodbConnetion(app); connError != nil {
-		panic(fmt.Sprintf("Error connecting to mongodb: %v", connError.Error))
+	if s.MongodbConn.Error != nil {
+		panic(fmt.Sprintf("Error connecting to mongodb: %v", s.MongodbConn.Error))
 	}
 
 	if connError := elasticsearchConnetion(app); connError != nil {
@@ -76,15 +78,10 @@ func (s *server) Run(app env.Application, log logger.ILoggerProvider) error {
 	return nil
 }
 
-func mongodbConnetion(app env.Application) error {
+func mongodbStart() (mongoConnection mongodb.Storage) {
 	ctx := context.TODO()
-	mongoConnection := mongodb.New(ctx)
-
-	if mongoConnection.Error != nil {
-		return mongoConnection.Error
-	} else {
-		return nil
-	}
+	mongoConnection = mongodb.New(ctx)
+	return
 }
 
 func elasticsearchConnetion(app env.Application) error {
