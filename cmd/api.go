@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 
@@ -53,8 +52,6 @@ func cmdRun(cmd *cobra.Command, args []string) {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(cfg)
 
 	svr := server.New(addr, port)
 	log := logger.New()

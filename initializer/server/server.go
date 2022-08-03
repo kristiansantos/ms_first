@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kristiansantos/ms_first/initializer/env"
 	"github.com/kristiansantos/ms_first/pkg/logger"
+	"github.com/kristiansantos/ms_first/pkg/middleware"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"
 )
 
@@ -15,28 +17,53 @@ type server struct {
 	Addr        string
 	Port        int
 	MongodbConn mongodb.Storage
-	HttpServer  http.Server
+	HttpServer  *fiber.App
 }
 
 func New(addr string, port int) *server {
 	return &server{
-		Addr:        addr,
-		Port:        port,
-		MongodbConn: mongodbStart(),
+		Addr: addr,
+		Port: port,
 	}
 }
 
-func (s *server) HttpServerBuild(app env.Application) {
-	s.HttpServer = http.Server{
-		Addr: fmt.Sprintf("%s:%d", s.Addr, s.Port),
-		// Handler:      middleware.Recovery(router.Client),
+func (s *server) Run(app env.Application, log logger.ILoggerProvider) error {
+	log.Info("server.main.Run", fmt.Sprintf("Server running on port :%d", s.Port))
+	log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
+	log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
+
+	s.mongodbStart()
+
+	if s.MongodbConn.Error != nil {
+		panic(fmt.Sprintf("Error connecting to mongodb: %v", s.MongodbConn.Error))
+	}
+
+	if connError := elasticsearchConnetion(app); connError != nil {
+		panic(fmt.Sprintf("Error connecting to elasticsearch: %v", connError.Error))
+	}
+
+	s.serverConfig(app)
+
+	go s.startServerHttp()
+
+	return nil
+}
+
+func (s *server) serverConfig(app env.Application) {
+	config := fiber.Config{
 		ReadTimeout:  app.ReadTimeout * 2,
 		WriteTimeout: app.WriteTimeout * 2,
 	}
+
+	s.HttpServer = fiber.New(config)
+
+	middleware.FiberMiddleware(s.HttpServer)
 }
 
-func (s *server) StartServerHttp() error {
-	if err := s.HttpServer.ListenAndServe(); err != nil {
+func (s *server) startServerHttp() error {
+	serverHost := fmt.Sprintf("%s:%d", s.Addr, s.Port)
+
+	if err := s.HttpServer.Listen(serverHost); err != nil {
 		if err == http.ErrServerClosed {
 			fmt.Println("Finish server")
 		} else {
@@ -58,27 +85,7 @@ func (s *server) StartServerHttp() error {
 	return nil
 }
 
-func (s *server) Run(app env.Application, log logger.ILoggerProvider) error {
-	log.Info("server.main.Run", fmt.Sprintf("Server running on port :%d", s.Port))
-	log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
-	log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
-
-	if s.MongodbConn.Error != nil {
-		panic(fmt.Sprintf("Error connecting to mongodb: %v", s.MongodbConn.Error))
-	}
-
-	if connError := elasticsearchConnetion(app); connError != nil {
-		panic(fmt.Sprintf("Error connecting to elasticsearch: %v", connError.Error))
-	}
-
-	s.HttpServerBuild(app)
-
-	go s.StartServerHttp()
-
-	return nil
-}
-
-func mongodbStart() (mongoConnection mongodb.Storage) {
+func (s *server) mongodbStart() (mongoConnection mongodb.Storage) {
 	ctx := context.TODO()
 	mongoConnection = mongodb.New(ctx)
 	return
