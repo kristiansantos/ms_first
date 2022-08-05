@@ -24,5 +24,7 @@ func (service *userUpdateService) UpdateUser(id string, userDto dto.UserUpdate) 
 		Password: userDto.Password,
 	}
 
+	userUpdate.Populate()
+
 	return service.repository.Update(id, userUpdate)
 }
