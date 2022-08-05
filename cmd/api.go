@@ -7,7 +7,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kristiansantos/ms_first/initializer/env"
 	"github.com/kristiansantos/ms_first/initializer/server"
-	"github.com/kristiansantos/ms_first/pkg/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -54,8 +53,8 @@ func cmdRun(cmd *cobra.Command, args []string) {
 	}
 
 	svr := server.New(addr, port)
-	log := logger.New()
-	svr.Run(cfg, log)
+	// log := logger.New()
+	svr.Run(cfg)
 
 	chanExit := make(chan os.Signal, 1)
 	signal.Notify(chanExit, os.Interrupt)
