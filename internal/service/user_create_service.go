@@ -24,5 +24,7 @@ func (service *userCreateService) CreateUser(userDto dto.UserCreate) (user entit
 		Password: userDto.Password,
 	}
 
+	userCreate.Populate()
+
 	return service.repository.Create(userCreate)
 }
