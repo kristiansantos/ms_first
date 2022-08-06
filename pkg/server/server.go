@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kristiansantos/ms_first/pkg/env"
+	"github.com/kristiansantos/ms_first/pkg/logger"
 	"github.com/kristiansantos/ms_first/pkg/middleware"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"
 	"github.com/kristiansantos/ms_first/pkg/routes"
@@ -27,10 +28,10 @@ func New(addr string, port int) *server {
 	}
 }
 
-func (s *server) Run(app env.Application) error {
-	// log.Info("server.main.Run", fmt.Sprintf("Server running on port :%d", s.Port))
-	// log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
-	// log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
+func (s *server) Run(app env.Application, log *logger.Logger) error {
+	log.Info("server.main.Run", fmt.Sprintf("Server running on port :%d", s.Port))
+	log.Info("server.main.Run", fmt.Sprintf("Environment: %s", app.Environment))
+	log.Info("server.main.Run", fmt.Sprintf("Version: %s", app.Version))
 
 	s.mongodbStart()
 

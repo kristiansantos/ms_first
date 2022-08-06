@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kristiansantos/ms_first/pkg/env"
+	"github.com/kristiansantos/ms_first/pkg/logger"
 	"github.com/kristiansantos/ms_first/pkg/server"
 	"github.com/spf13/cobra"
 )
@@ -40,7 +41,7 @@ func init() {
 }
 
 func cmdRun(cmd *cobra.Command, args []string) {
-	if err := godotenv.Load("./configs/.env." + environment); err != nil {
+	if err := godotenv.Load("./pkg/configs/.env." + environment); err != nil {
 		panic(err)
 	}
 
@@ -53,8 +54,8 @@ func cmdRun(cmd *cobra.Command, args []string) {
 	}
 
 	svr := server.New(addr, port)
-	// log := logger.New()
-	svr.Run(cfg)
+	log := logger.New(cfg.Log.Level)
+	svr.Run(cfg, log)
 
 	chanExit := make(chan os.Signal, 1)
 	signal.Notify(chanExit, os.Interrupt)
