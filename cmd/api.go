@@ -5,8 +5,8 @@ import (
 	"os/signal"
 
 	"github.com/joho/godotenv"
-	"github.com/kristiansantos/ms_first/initializer/env"
-	"github.com/kristiansantos/ms_first/initializer/server"
+	"github.com/kristiansantos/ms_first/pkg/env"
+	"github.com/kristiansantos/ms_first/pkg/server"
 	"github.com/spf13/cobra"
 )
 

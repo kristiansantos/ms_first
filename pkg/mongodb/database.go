@@ -6,7 +6,7 @@ import (
 	"html"
 	"sync"
 
-	"github.com/kristiansantos/ms_first/initializer/env"
+	"github.com/kristiansantos/ms_first/pkg/env"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

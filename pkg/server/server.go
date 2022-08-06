@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kristiansantos/ms_first/initializer/env"
+	"github.com/kristiansantos/ms_first/pkg/env"
 	"github.com/kristiansantos/ms_first/pkg/middleware"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"
 	"github.com/kristiansantos/ms_first/pkg/routes"
@@ -36,10 +36,6 @@ func (s *server) Run(app env.Application) error {
 
 	if s.MongodbConn.Error != nil {
 		panic(fmt.Sprintf("Error connecting to mongodb: %v", s.MongodbConn.Error))
-	}
-
-	if connError := elasticsearchConnetion(app); connError != nil {
-		panic(fmt.Sprintf("Error connecting to elasticsearch: %v", connError.Error))
 	}
 
 	s.serverConfig(app)
@@ -92,9 +88,4 @@ func (s *server) mongodbStart() (mongoConnection mongodb.Storage) {
 	ctx := context.TODO()
 	mongoConnection = mongodb.New(ctx)
 	return
-}
-
-func elasticsearchConnetion(app env.Application) error {
-
-	return nil
 }

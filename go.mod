@@ -33,6 +33,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/gofiber/fiber/v2 v2.36.0
 	github.com/gofiber/jwt/v2 v2.2.7
+	github.com/google/uuid v1.3.0
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/rs/zerolog v1.27.0
 	github.com/spf13/cobra v1.5.0 // indirect

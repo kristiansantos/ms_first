@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kristiansantos/ms_first/internal/repository"
 	"github.com/kristiansantos/ms_first/internal/web/restfull/handler"
+	mongoRepository "github.com/kristiansantos/ms_first/pkg/infra/mongodb"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"
 )
 
@@ -17,7 +17,7 @@ func UserRoutes(a *fiber.App) {
 	ctx := context.TODO()
 
 	db := mongodb.New(ctx)
-	userRepository := repository.NewUsersRepository(db, ctx)
+	userRepository := mongoRepository.NewUsersRepository(db, ctx)
 	userHandler := handler.NewUserHandler(userRepository)
 
 	route.Get("/users", userHandler.Index)
