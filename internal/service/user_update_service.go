@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateUserServicer interface {
-	UpdateUser(id string, userDto dto.UserUpdate) (user entity.User, err error)
+	Execute(id string, userDto dto.UserUpdate) (user entity.User, err error)
 }
 type userUpdateService struct {
 	repository repository.UserRepository
@@ -17,7 +17,7 @@ func NewUserUpdateService(repository repository.UserRepository) UpdateUserServic
 	return &userUpdateService{repository}
 }
 
-func (service *userUpdateService) UpdateUser(id string, userDto dto.UserUpdate) (user entity.User, err error) {
+func (service *userUpdateService) Execute(id string, userDto dto.UserUpdate) (user entity.User, err error) {
 	var userUpdate = entity.User{
 		Name:     userDto.Name,
 		Email:    userDto.Email,

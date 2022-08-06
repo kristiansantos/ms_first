@@ -7,7 +7,7 @@ import (
 )
 
 type CreateUserServicer interface {
-	CreateUser(userDto dto.UserCreate) (user entity.User, err error)
+	Execute(userDto dto.UserCreate) (user entity.User, err error)
 }
 type userCreateService struct {
 	repository repository.UserRepository
@@ -17,7 +17,7 @@ func NewUserCreateService(repository repository.UserRepository) CreateUserServic
 	return &userCreateService{repository}
 }
 
-func (service *userCreateService) CreateUser(userDto dto.UserCreate) (user entity.User, err error) {
+func (service *userCreateService) Execute(userDto dto.UserCreate) (user entity.User, err error) {
 	var userCreate = entity.User{
 		Name:     userDto.Name,
 		Email:    userDto.Email,

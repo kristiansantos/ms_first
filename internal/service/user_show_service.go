@@ -6,7 +6,7 @@ import (
 )
 
 type ShowUserServicer interface {
-	GetUserById(id string) (*entity.User, error)
+	Execute(id string) (*entity.User, error)
 }
 type userShowService struct {
 	repository repository.UserRepository
@@ -16,6 +16,6 @@ func NewUserShowService(repository repository.UserRepository) ShowUserServicer {
 	return &userShowService{repository}
 }
 
-func (service *userShowService) GetUserById(id string) (*entity.User, error) {
+func (service *userShowService) Execute(id string) (*entity.User, error) {
 	return service.repository.GetBy(id)
 }

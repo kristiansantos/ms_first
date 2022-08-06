@@ -51,7 +51,7 @@ func (u *userHandler) LogOut(c *fiber.Ctx) error {
 }
 
 func (u *userHandler) Index(c *fiber.Ctx) error {
-	users, err := u.indexService.GetAllUsers(nil)
+	users, err := u.indexService.Execute(nil)
 
 	if err != nil {
 		return c.
@@ -67,7 +67,7 @@ func (u *userHandler) Index(c *fiber.Ctx) error {
 func (u *userHandler) Show(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	user, err := u.showService.GetUserById(id)
+	user, err := u.showService.Execute(id)
 
 	if err != nil {
 		return c.
@@ -89,7 +89,7 @@ func (u *userHandler) Create(c *fiber.Ctx) error {
 			JSON(nil)
 	}
 
-	user, err := u.createService.CreateUser(userCreate)
+	user, err := u.createService.Execute(userCreate)
 
 	if err != nil {
 		return c.
@@ -112,7 +112,7 @@ func (u *userHandler) Update(c *fiber.Ctx) error {
 			JSON(nil)
 	}
 
-	user, err := u.updateService.UpdateUser(id, userUpdate)
+	user, err := u.updateService.Execute(id, userUpdate)
 
 	if err != nil {
 		return c.
@@ -128,7 +128,7 @@ func (u *userHandler) Update(c *fiber.Ctx) error {
 func (u *userHandler) Delete(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	err := u.deleteService.DeleteUser(id)
+	err := u.deleteService.Execute(id)
 
 	if err != nil {
 		return c.

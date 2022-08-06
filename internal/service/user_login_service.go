@@ -6,7 +6,7 @@ import (
 )
 
 type LogInUserServicer interface {
-	LogIn(email string, password string) (*entity.User, error)
+	Execute(email string, password string) (*entity.User, error)
 }
 type logInShowService struct {
 	repository repository.UserRepository
@@ -16,6 +16,6 @@ func NewLogInUserService(repository repository.UserRepository) LogInUserServicer
 	return &logInShowService{repository}
 }
 
-func (service *logInShowService) LogIn(email string, password string) (*entity.User, error) {
+func (service *logInShowService) Execute(email string, password string) (*entity.User, error) {
 	return &entity.User{}, nil
 }

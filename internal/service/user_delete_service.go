@@ -5,7 +5,7 @@ import (
 )
 
 type DeleteUserServicer interface {
-	DeleteUser(id string) error
+	Execute(id string) error
 }
 type userDeleteService struct {
 	repository repository.UserRepository
@@ -15,6 +15,6 @@ func NewUserDeleteService(repository repository.UserRepository) DeleteUserServic
 	return &userDeleteService{repository}
 }
 
-func (service *userDeleteService) DeleteUser(id string) (err error) {
+func (service *userDeleteService) Execute(id string) (err error) {
 	return service.repository.Delete(id)
 }

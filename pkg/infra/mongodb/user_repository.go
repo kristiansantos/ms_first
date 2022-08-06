@@ -68,7 +68,7 @@ func (r *usersRepository) Update(id string, user entity.User) (entity.User, erro
 }
 
 func (r *usersRepository) Delete(id string) error {
-	_, err := r.collection.DeleteOne(r.ctx, bson.ObjectIdHex(id))
+	_, err := r.collection.DeleteOne(r.ctx, id)
 
 	return err
 }

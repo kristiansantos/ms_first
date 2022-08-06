@@ -40,10 +40,21 @@ func New(ctx context.Context) Storage {
 }
 
 func connect(ctx context.Context, init env.Application) (*mongo.Database, error) {
-	connString := fmt.Sprintf("mongodb://%s:%s@%s/%s", init.Mongo.User, init.Mongo.Pass, init.Mongo.Host, init.Mongo.Database)
+	connString := fmt.Sprintf("mongodb://%s:%s@%s/%s",
+		init.Mongo.User,
+		init.Mongo.Pass,
+		init.Mongo.Host,
+		init.Mongo.Database,
+	)
 
 	if init.Mongo.Args != "" {
-		connString = fmt.Sprintf("mongodb://%s:%s@%s/%s?%s", init.Mongo.User, init.Mongo.Pass, init.Mongo.Host, init.Mongo.Database, init.Mongo.Args)
+		connString = fmt.Sprintf("mongodb://%s:%s@%s/%s?%s",
+			init.Mongo.User,
+			init.Mongo.Pass,
+			init.Mongo.Host,
+			init.Mongo.Database,
+			init.Mongo.Args,
+		)
 	}
 
 	mongodbUri := html.UnescapeString(connString)
