@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kristiansantos/ms_first/internal/web/restfull/handler"
+	"github.com/kristiansantos/ms_first/pkg/app/fiber/handler"
 	mongoRepository "github.com/kristiansantos/ms_first/pkg/infra/mongodb"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"
 )

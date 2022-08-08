@@ -31,6 +31,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/go-chi/chi v1.5.4
 	github.com/gofiber/fiber/v2 v2.36.0
 	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/google/uuid v1.3.0
