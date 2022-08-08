@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kristiansantos/ms_first/pkg/app/fiber/middleware"
-	"github.com/kristiansantos/ms_first/pkg/app/fiber/routes"
+	"github.com/kristiansantos/ms_first/internal/app/fiber/middleware"
+	"github.com/kristiansantos/ms_first/internal/app/fiber/routes"
 	"github.com/kristiansantos/ms_first/pkg/env"
 	"github.com/kristiansantos/ms_first/pkg/logger"
 	"github.com/kristiansantos/ms_first/pkg/mongodb"

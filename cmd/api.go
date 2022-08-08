@@ -5,7 +5,7 @@ import (
 	"os/signal"
 
 	"github.com/joho/godotenv"
-	"github.com/kristiansantos/ms_first/pkg/app/fiber/server"
+	"github.com/kristiansantos/ms_first/internal/app/fiber/server"
 	"github.com/kristiansantos/ms_first/pkg/env"
 	"github.com/kristiansantos/ms_first/pkg/logger"
 	"github.com/spf13/cobra"
@@ -44,7 +44,7 @@ func init() {
 }
 
 func cmdRun(cmd *cobra.Command, args []string) {
-	if err := godotenv.Load("./pkg/configs/.env." + environment); err != nil {
+	if err := godotenv.Load("./configs/.env." + environment); err != nil {
 		panic(err)
 	}
 
